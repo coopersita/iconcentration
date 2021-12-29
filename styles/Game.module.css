@@ -1,0 +1,28 @@
+.grid4 button,
+.grid6 button,
+.grid10 button {
+
+    font-size: 45px;
+    padding: 10px;
+    margin: 10px;
+}
+
+.grid4 svg,
+.grid6 svg,
+.grid10 svg {
+    display: block;
+    margin: auto;
+
+}
+
+.grid4 {
+    width: calc(91px * 4);
+}
+
+.grid6 {
+    width: calc(91px * 6);
+}
+
+.grid10 {
+    width: calc(91px * 10);
+}

@@ -1,0 +1,9 @@
+.icon_btn {
+  font-size: 2em;
+}
+
+.icon_btn svg {
+  display: block;
+  pointer-events: none;
+
+}
