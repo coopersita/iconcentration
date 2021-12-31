@@ -1,6 +1,3 @@
-import { useState } from "react";
-
-import ReactCardFlip from "react-card-flip";
 import {
   DiReact,
   DiAndroid,
@@ -159,9 +156,7 @@ import {
   GrSun,
 } from "react-icons/gr";
 
-export default function Card(props) {
-  const [isFlipped, setFlipped] = useState(false);
-
+export default function Card({ iconSet, index, callback, face }) {
   const icons1 = [
     <DiReact key="DiReact" />,
     <DiAndroid key="DiAndroid" />,
@@ -266,6 +261,7 @@ export default function Card(props) {
     <GiBat key="GiBat" />,
     <GiBatMask key="GiBatMask" />,
     <GiBearFace key="GiBearFace" />,
+    <GiEmptyChessboard key="GiEmptyChessboard" />,
   ];
 
   const icons3 = [
@@ -321,33 +317,26 @@ export default function Card(props) {
     <GrSun key="GrSun" />,
   ];
 
-  const handleFlip = () => {
-    setFlipped(!isFlipped);
-  };
-
   let icon = null;
 
-  switch (props.iconSet) {
+  switch (iconSet) {
     case 1:
-      icon = icons1[props.index];
+      icon = icons1[index];
       break;
     case 2:
-      icon = icons2[props.index];
+      icon = icons2[index];
       break;
     case 3:
-      icon = icons3[props.index];
+      icon = icons3[index];
       break;
     default:
-      icon = icons1[props.index];
+      icon = icons1[index];
       break;
   }
-  return (
-    <ReactCardFlip isFlipped={isFlipped} flipDirection="horizontal">
-      <button onClick={handleFlip}>
-        <GiEmptyChessboard />
-      </button>
 
-      <button onClick={handleFlip}>{icon}</button>
-    </ReactCardFlip>
+  return (
+    <button onClick={callback} data-index={face}>
+      {icon}
+    </button>
   );
 }
