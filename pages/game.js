@@ -2,17 +2,19 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import ReactCardFlip from "react-card-flip";
 import Card from "../components/card";
-import GiEmptyChessboard from "react-icons/gi";
 import styles from "../styles/Game.module.css";
 
 export default function Game() {
   const { query } = useRouter();
-
-  // const [flipCout, setFlipCout] = useState(0);
+  const [flipCout, setFlipCout] = useState([]);
+  const [tileOrder, setTileOrder] = useState([]);
+  const [cardsFlipped, setCardsFlipped] = useState([]);
+  const [cardsMatched, setCardsMatched] = useState([]);
+  const [isFinished, setFinished] = useState(false);
 
   let tileNumber = 0;
   let tileTransition = 0;
@@ -66,60 +68,109 @@ export default function Game() {
       break;
   }
 
-  const [cardsFlipped, setCardsFlipped] = useState(
-    Array(tileNumber).fill(false)
-  );
-
-  let counter = tileNumber / 2;
-
-  let iconSet = [...Array(counter).keys()];
-  while (counter > 0) {
-    const index = Math.floor(Math.random() * iconSet.length);
-    tiles.push(iconSet.splice(index, 1));
-    counter--;
+  function shuffle(a) {
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
   }
 
-  const handleFlip = (e) => {
-    const index = e.target.dataset.index;
-    console.log(cardsFlipped[index]);
-    if (cardsFlipped[index] === false) {
-      // const flipCount = props.cardsFlipped();
-      let tempCards = cardsFlipped;
-      tempCards[index] = true;
-      setCardsFlipped(tempCards);
-      console.log(cardsFlipped[index]);
+  useEffect(() => {
+    let counter = tileNumber / 2;
 
-      setTimeout(() => {
-        tempCards[index] = false;
-        setCardsFlipped(tempCards);
-      }, tileTransition * 1000);
+    let iconSet = [...Array(50).keys()];
+    while (counter > 0) {
+      const index = Math.floor(Math.random() * iconSet.length);
+      tiles.push(iconSet.splice(index, 1));
+      counter--;
     }
 
-    //   if (props.cardsFlipped == 2) {
-    //     setTimeout(() => {
-    //       setFlipped(false);
-    //     }, props.speed * 1000);
-    //   }
-    // } else {
-    //   setFlipped(false);
-    // }
+    setTileOrder(shuffle(tiles.concat(tiles)));
+
+    setCardsFlipped(Array(tileNumber).fill(false));
+    setCardsMatched(Array(tileNumber).fill(false));
+  }, []);
+
+  const handleFlip = (index) => {
+    if (!flipCout.includes(index) && flipCout.length <= 2) {
+      let count = flipCout;
+      flipCout.push(index);
+      setFlipCout(count);
+      setCardsFlipped((prev) =>
+        prev.map((el, i) => {
+          if (i === index) {
+            return true;
+          }
+          return el;
+        })
+      );
+    }
   };
-  //duplicat the array and shuffle
-  const tileOrder = tiles.concat(tiles).sort((a, b) => 0.5 - Math.random());
+
+  useEffect(() => {
+    if (flipCout.length === 2) {
+      let isMatch = false;
+      if (tileOrder[flipCout[0]] === tileOrder[flipCout[1]]) {
+        isMatch = true;
+      }
+      if (!isMatch) {
+        setTimeout(() => {
+          setCardsFlipped((prev) =>
+            prev.map((el, i) => {
+              if (flipCout.includes(i)) {
+                return false;
+              }
+              return el;
+            })
+          );
+        }, tileTransition * 1000);
+      } else {
+        isMatch = false;
+        setCardsMatched((prev) =>
+          prev.map((el, i) => {
+            if (flipCout.includes(i)) {
+              return true;
+            }
+            return el;
+          })
+        );
+      }
+      setFlipCout([]);
+    }
+  }, [
+    cardsFlipped,
+    tileTransition,
+    flipCout,
+    tileOrder,
+    cardsMatched,
+    tileNumber,
+  ]);
+
+  useEffect(() => {
+    if (cardsMatched.filter(Boolean).length == tileNumber) {
+      setFinished(true);
+    }
+  }, [cardsMatched, tileNumber]);
+
   let cards = tileOrder.map((e, i) => (
-    <ReactCardFlip
-      isFlipped={cardsFlipped[i]}
-      flipDirection="horizontal"
+    <div
+      className={`${cardsMatched[i] ? styles.matched : ""} ${
+        isFinished ? styles.finished : ""
+      }`}
       key={"card" + i + "-" + e}
     >
-      <Card iconSet={2} index={50} callback={handleFlip} face={e} />
-      <Card
-        iconSet={parseInt(query.icons)}
-        index={e}
-        callback={handleFlip}
-        face={e}
-      />
-    </ReactCardFlip>
+      <ReactCardFlip isFlipped={cardsFlipped[i]} flipDirection="horizontal">
+        <Card
+          iconSet={2}
+          index={50}
+          callback={() => {
+            handleFlip(i);
+          }}
+        />
+        <Card iconSet={parseInt(query.icons)} index={e} callback={null} />
+      </ReactCardFlip>
+    </div>
   ));
 
   return (
@@ -138,7 +189,7 @@ export default function Game() {
           <div className={gridSize + " grid"}>{cards}</div>
 
           <Link href="/" passHref>
-            <button className="start">Back</button>
+            <button className="start">Restart</button>
           </Link>
         </main>
         <footer className="footer">

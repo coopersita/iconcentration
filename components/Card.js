@@ -156,7 +156,7 @@ import {
   GrSun,
 } from "react-icons/gr";
 
-export default function Card({ iconSet, index, callback, face }) {
+export default function Card({ iconSet, index, callback }) {
   const icons1 = [
     <DiReact key="DiReact" />,
     <DiAndroid key="DiAndroid" />,
@@ -334,9 +334,5 @@ export default function Card({ iconSet, index, callback, face }) {
       break;
   }
 
-  return (
-    <button onClick={callback} data-index={face}>
-      {icon}
-    </button>
-  );
+  return <button onClick={callback}>{icon}</button>;
 }

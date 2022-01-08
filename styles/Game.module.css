@@ -26,3 +26,11 @@
 .grid10 {
     width: calc(91px * 10);
 }
+
+.matched button {
+    background-color: var(--green);
+}
+
+.finished button {
+    background-color: var(--purple);
+}
