@@ -1,7 +1,7 @@
 module.exports = {
   reactStrictMode: true,
   basePath: "/iconcentration",
-  assetPrefix: "/iconcentrarion",
+  // assetPrefix: "/iconcentrarion",
   async exportPathMap() {
     const paths = {
       "/": { page: "/" },
