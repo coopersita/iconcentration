@@ -110,6 +110,7 @@ button {
   display: block;
   margin-left: auto;
   background-color: var(--purple);
+  margin-top: 2em;
 }
 
 .selected {

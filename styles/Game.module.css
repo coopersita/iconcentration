@@ -34,3 +34,7 @@
 .finished button {
     background-color: var(--purple);
 }
+
+.tries {
+    text-align: center;
+}

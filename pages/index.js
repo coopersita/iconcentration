@@ -18,7 +18,6 @@ export default function Home() {
   const variants = {
     hidden: {
       opacity: 0,
-      width: "90%",
     },
     visible: {
       opacity: 1,

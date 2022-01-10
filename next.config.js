@@ -1,7 +1,7 @@
 module.exports = {
   reactStrictMode: true,
   basePath: "/iconcentration",
-  // assetPrefix: "/iconcentrarion",
+  // // assetPrefix: "/iconcentrarion",
   async exportPathMap() {
     const paths = {
       "/": { page: "/" },
@@ -10,3 +10,7 @@ module.exports = {
     return paths;
   },
 };
+// const withBundleAnalyzer = require("@next/bundle-analyzer")({
+//   enabled: process.env.ANALYZE === "true",
+// });
+// module.exports = withBundleAnalyzer({});

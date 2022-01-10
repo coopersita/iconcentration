@@ -15,24 +15,12 @@ export default function Game() {
   const [cardsFlipped, setCardsFlipped] = useState([]);
   const [cardsMatched, setCardsMatched] = useState([]);
   const [isFinished, setFinished] = useState(false);
+  const [tries, setTries] = useState(0);
 
   let tileNumber = 0;
   let tileTransition = 0;
   let tiles = [];
   let gridSize = "grid6";
-
-  const variants = {
-    hidden: {
-      opacity: 0,
-    },
-    visible: {
-      opacity: 1,
-      transition: {
-        delay: 0.2,
-        duration: 0.6,
-      },
-    },
-  };
 
   switch (query.size) {
     case "s":
@@ -110,6 +98,7 @@ export default function Game() {
 
   useEffect(() => {
     if (flipCout.length === 2) {
+      setTries(tries + 1);
       let isMatch = false;
       if (tileOrder[flipCout[0]] === tileOrder[flipCout[1]]) {
         isMatch = true;
@@ -145,6 +134,7 @@ export default function Game() {
     tileOrder,
     cardsMatched,
     tileNumber,
+    tries,
   ]);
 
   useEffect(() => {
@@ -153,12 +143,26 @@ export default function Game() {
     }
   }, [cardsMatched, tileNumber]);
 
+  const variants = {
+    visible: (i) => ({
+      opacity: 1,
+      transition: {
+        delay: i * 0.02,
+      },
+    }),
+    hidden: { opacity: 0 },
+  };
+
   let cards = tileOrder.map((e, i) => (
-    <div
+    <motion.div
       className={`${cardsMatched[i] ? styles.matched : ""} ${
         isFinished ? styles.finished : ""
       }`}
       key={"card" + i + "-" + e}
+      variants={variants}
+      custom={i}
+      initial="hidden"
+      animate="visible"
     >
       <ReactCardFlip isFlipped={cardsFlipped[i]} flipDirection="horizontal">
         <Card
@@ -170,38 +174,36 @@ export default function Game() {
         />
         <Card iconSet={parseInt(query.icons)} index={e} callback={null} />
       </ReactCardFlip>
-    </div>
+    </motion.div>
   ));
 
   return (
-    <motion.div initial="hidden" animate="visible" variants={variants}>
-      <div className="container">
-        <Head>
-          <title>Iconcentration</title>
-        </Head>
-        <main className="main">
-          <h1 className="title">Iconcentration</h1>
-          <p className="description">
-            Flip cards over to make pairs. Match all cards with as few tries as
-            possible.
-          </p>
+    <div className="container">
+      <Head>
+        <title>Iconcentration</title>
+      </Head>
+      <main className="main">
+        <h1 className="title">Iconcentration</h1>
+        <p className="description">
+          Flip cards over to make pairs. Match all cards with as few tries as
+          possible.
+        </p>
+        <h2 className={styles.tries}>Tries: {tries}</h2>
+        <div className={gridSize + " grid"}>{cards}</div>
 
-          <div className={gridSize + " grid"}>{cards}</div>
-
-          <Link href="/" passHref>
-            <button className="start">Restart</button>
-          </Link>
-        </main>
-        <footer className="footer">
-          <a
-            href="https://aliciaramirez.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By Alicia Ramirez
-          </a>
-        </footer>
-      </div>
-    </motion.div>
+        <Link href="/" passHref>
+          <button className="start">Restart</button>
+        </Link>
+      </main>
+      <footer className="footer">
+        <a
+          href="https://aliciaramirez.com"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          By Alicia Ramirez
+        </a>
+      </footer>
+    </div>
   );
 }
