@@ -2,6 +2,7 @@
 .grid6,
 .grid10 {
     perspective: 1000px;
+    width: 100%;
 }
 
 .grid4 button,
@@ -28,16 +29,18 @@
     pointer-events: none;
 }
 
-.grid4 {
-    width: calc(91px * 4);
-}
+@media (min-width: 1000px) {
+    .grid4 {
+        width: calc(91px * 4);
+    }
 
-.grid6 {
-    width: calc(91px * 6);
-}
+    .grid6 {
+        width: calc(91px * 6);
+    }
 
-.grid10 {
-    width: calc(91px * 10);
+    .grid10 {
+        width: calc(91px * 10);
+    }
 }
 
 .matched button {
