@@ -146,11 +146,12 @@ export default function Game() {
   const variants = {
     visible: (i) => ({
       opacity: 1,
+      rotateY: 0,
       transition: {
         delay: i * 0.02,
       },
     }),
-    hidden: { opacity: 0 },
+    hidden: { opacity: 0, rotateY: 180 },
   };
 
   let cards = tileOrder.map((e, i) => (

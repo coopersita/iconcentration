@@ -1,3 +1,9 @@
+.grid4,
+.grid6,
+.grid10 {
+    perspective: 1000px;
+}
+
 .grid4 button,
 .grid6 button,
 .grid10 button {
@@ -5,6 +11,13 @@
     font-size: 45px;
     padding: 10px;
     margin: 10px;
+}
+
+.grid4>div,
+.grid6>div,
+.grid10>div {
+    transform-style: preserve-3d;
+    transition: all .2s linear;
 }
 
 .grid4 svg,
